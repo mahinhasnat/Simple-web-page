@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup with Captcha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f2f5;
+    }
+
+    nav {
+      background: #343a40;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 300px;
+      margin: 50px auto;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .captcha-box {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .captcha {
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 3px;
+      background: #eee;
+      padding: 5px 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: red;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 10px;
+      background: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <nav>Identity Maker(Social Account)</nav>
+
+  <div class="container">
+    <h3>Create An Account</h3>
+    <input type="text" id="username" placeholder="Username"/>
+    <input type="password" id="password" placeholder="Password"/>
+
+    <div class="captcha-box">
+      <div class="captcha" id="captchaText"></div>
+      <button type="button" onclick="generateCaptcha()">↻</button>
+    </div>
+    <input type="text" id="captchaInput" placeholder="Enter captcha"/>
+
+    <button onclick="createAccount()">Sign Up</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <footer>© 2025 Developed By MAHIN HASNAT</footer>
+
+  <script>
+    let captcha = "";
+
+    function generateCaptcha() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      captcha = "";
+      for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById("captchaText").innerText = captcha;
+    }
+
+    function createAccount() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const inputCaptcha = document.getElementById("captchaInput").value;
+
+      if (!username || !password || !inputCaptcha) {
+        showMessage("Please fill in all fields.");
+        return;
+      }
+
+      if (inputCaptcha !== captcha) {
+        showMessage("Captcha does not match. Try again.");
+        generateCaptcha();
+        return;
+      }
+
+      localStorage.setItem("account", JSON.stringify({ username, password }));
+      showMessage("Account created successfully!", true);
+    }
+
+    function showMessage(msg, success = false) {
+      const messageBox = document.getElementById("message");
+      messageBox.innerText = msg;
+      messageBox.style.color = success ? "green" : "red";
+    }
+
+    window.onload = generateCaptcha;
+  </script>
+</body>
+</html>
